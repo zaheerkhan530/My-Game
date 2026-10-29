@@ -1,28 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My Game</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVIATOR</title>
 <style>
-body{margin:0;background:#0f172a;color:#fff;font-family:Arial;text-align:center}
-#game{position:relative;width:100vw;height:90vh;background:linear-gradient(#38bdf8,#0f172a);overflow:hidden}
-#player{position:absolute;bottom:20px;left:50%;width:50px;height:50px;background:#facc15;border-radius:10px;transform:translateX(-50%);font-size:28px;line-height:50px}
-.coin{position:absolute;width:30px;height:30px;background:gold;border-radius:50%;text-align:center}
-#score{position:absolute;top:10px;left:10px;font-size:20px}
-#btns{position:absolute;bottom:0;width:100%;display:flex;justify-content:space-between;padding:10px;box-sizing:border-box}
-button{padding:12px 25px;font-size:18px;border:0;border-radius:8px;background:#22c55e;color:#fff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0b0e14;color:#fff;font-family:Arial, sans-serif}
+.top{padding:14px;background:#151a27;display:flex;justify-content:space-between}
+.top b{color:#ff3b6e}
+.game{position:relative;height:420px;margin:10px;background:radial-gradient(circle at bottom left,#1c2140,#0b0e14);border-radius:18px;border:1px solid #222;overflow:hidden}
+#cv{width:100%;height:100%}
+.center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+#mul{font-size:62px;font-weight:900}
+#msg{color:#8b8fa8;margin-top:6px;font-size:13px}
+.panel{background:#151a27;margin:10px;padding:14px;border-radius:16px}
+.row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.row button{background:#222;border:none;color:#fff;width:36px;height:36px;border-radius:8px;font-size:18px}
+#mainBtn{width:100%;padding:16px;border:none;border-radius:12px;font-weight:900;font-size:18px;background:#00c950;color:#fff}
+#mainBtn.cash{background:#ff3b6e}
 </style>
 </head>
 <body>
-<div id="game">
-<div id="score">Score: 0</div>
-<div id="player">🚀</div>
-<div id="btns"><button onclick="move(-40)">◀️ LEFT</button><button onclick="move(40)">RIGHT ▶️</button></div>
+<div class="top"><div>✈ AVIATOR</div><div>BAL: <b id="bal">1000</b></div></div>
+<div class="game"><canvas id="cv"></canvas><div class="center"><div id="mul">1.00x</div><div id="msg">BET LAGAO</div></div></div>
+<div class="panel">
+<div class="row"><div>BET: <b id="betTxt">10</b></div><div><button onclick="change(-5)">-</button> <button onclick="change(5)">+</button></div></div>
+<button id="mainBtn" onclick="action()">BET 10</button>
 </div>
 <script>
-let s=0,px=innerWidth/2,pl=document.getElementById('player'),gm=document.getElementById('game'),sc=document.getElementById('score');
-function move(d){px+=d;if(px<20)px=20;if(px>innerWidth-20)px=innerWidth-20;pl.style.left=px+'px'}
-function coin(){let c=document.createElement('div');c.className='coin';c.innerHTML='💰';c.style.left=Math.random()*(innerWidth-40)+'px';c.style.top='0px';gm.appendChild(c);let f=setInterval(()=>{let t=parseInt(c.style.top)+5;c.style.top=t+'px';if(t>innerHeight-120&&Math.abs(parseInt(c.style.left)-px)<35){s++;sc.innerText='Score: '+s;clearInterval(f);c.remove()}if(t>innerHeight){clearInterval(f);c.remove()}},30)}setInterval(coin,700);
+let cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W,H;
+let bal=1000,bet=10,mult=1,playing=false,crash=2,t0,raf;
+function resize(){let r=cv.getBoundingClientRect();W=cv.width=r.width*2;H=cv.height=r.height*2}resize();onresize=resize;
+function change(d){if(playing)return;bet=Math.max(5,Math.min(200,bet+d));document.getElementById('betTxt').innerText=bet;if(!playing)document.getElementById('mainBtn').innerText='BET '+bet}
+function action(){if(!playing)start();else cashout()}
+function start(){
+ if(bal<bet){alert('Points khatam! Reset');bal=1000}
+ bal-=bet;document.getElementById('bal').innerText=bal;
+ crash=Math.random()<0.2?1+Math.random()*0.5:1.5+Math.random()*7;
+ playing=true;t0=Date.now();
+ document.getElementById('mainBtn').innerText='CASHOUT';document.getElementById('mainBtn').className='cash';document.getElementById('msg').innerText='FLYING...';
+ loop();
+}
+function loop(){
+ let e=(Date.now()-t0)/1000;
+ mult=Math.pow(1.12,e*1.8);
+ if(mult>=crash){busted();return}
+ document.getElementById('mul').innerText=mult.toFixed(2)+'x';
+ draw(e);
+ raf=requestAnimationFrame(loop);
+}
+function draw(e){
+ ctx.clearRect(0,0,W,H);
+ ctx.beginPath();ctx.strokeStyle='#ff3b6e';ctx.lineWidth=6;
+ ctx.moveTo(20,H-70);
+ for(let i=1;i<=e*60;i++){let x=20+i*7;let y=H-70-Math.pow(i,1.45)*1.3;ctx.lineTo(x,y)}
+ ctx.stroke();
+ let lx=20+e*60*7,ly=H-70-Math.pow(e*60,1.45)*1.3;
+ ctx.font='44px Arial';ctx.fillText('✈️',lx-15,ly-5);
+}
+function cashout(){
+ if(!playing)return;
+ let win=Math.floor(bet*mult);bal+=win;
+ document.getElementById('bal').innerText=bal;document.getElementById('msg').innerText='WON '+win;
+ playing=false;document.getElementById('mainBtn').innerText='BET '+bet;document.getElementById('mainBtn').className='';cancelAnimationFrame(raf);
+ setTimeout(reset,1300);
+}
+function busted(){
+ playing=false;document.getElementById('mul').innerText=crash.toFixed(2)+'x';document.getElementById('msg').innerText='FLEW AWAY '+crash.toFixed(2)+'x';document.getElementById('mul').style.color='#ff3b6e';
+ document.getElementById('mainBtn').innerText='BET '+bet;document.getElementById('mainBtn').className='';cancelAnimationFrame(raf);
+ setTimeout(reset,1500);
+}
+function reset(){document.getElementById('mul').innerText='1.00x';document.getElementById('mul').style.color='#fff';document.getElementById('msg').innerText='BET LAGAO';ctx.clearRect(0,0,W,H)}
+change(0);
 </script>
 </body>
 </html>
