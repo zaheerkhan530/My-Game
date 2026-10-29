@@ -1,1 +1,78 @@
-<!doctype html><html><head><meta name=viewport content="width=device-width,initial-scale=1"><style>body{margin:0;background:#0b0e1a;color:#fff;font-family:Arial;text-align:center}#t{padding:12px;background:#151a2e;display:flex;justify-content:space-between;font-weight:900}#b{height:420px;background:#0f142b;margin:8px;border-radius:14px;position:relative;overflow:hidden;border:1px solid #1e2747}#m{font-size:70px;font-weight:900;padding-top:35px}#p{font-size:70px;position:absolute;left:10%;top:62%;transition:1.3s}#bt{width:94%;padding:16px;border:0;border-radius:12px;font-weight:900;font-size:19px;background:#00c853;color:#fff;margin-top:8px}#bt.c{background:#ff1744}</style></head><body><div id=t><span>✈ AVIATOR PRO</span><span id=bal>1030</span></div><div id=b><div id=m>1.00x</div><div id=p>✈️</div><div id=msg>READY TO FLY</div></div><button id=bt onclick="fly()">BET 10$</button><script>let B=1030,bet=10,on=0,lim=2,st=0;function fly(){let mul=document.getElementById('m'),pl=document.getElementById('p'),msg=document.getElementById('msg'),bt=document.getElementById('bt'),bl=document.getElementById('bal');if(!on){if(B<bet)B=1000;B-=bet;bl.innerText=B;lim=Math.random()<.3?1+Math.random():Math.random()<.7?1.8+Math.random()*3:5+Math.random()*8;on=1;st=Date.now();bt.innerText='CASHOUT';bt.className='c';msg.innerText='FLYING...';pl.style.left='70%';pl.style.top='15%';pl.style.transform='rotate(-30deg) scale(1.5)';loop()}else{let e=(Date.now()-st)/1000;let cur=1+Math.pow(e,1.5)*.45;let win=Math.floor(bet*cur);B+=win;bl.innerText=B;msg.innerText='WIN '+win+'$';on=0;bt.innerText='BET '+bet+'$';bt.className='';pl.style.left='10%';pl.style.top='62%';pl.style.transform='rotate(0) scale(1)';mul.innerText='1.00x';msg.innerText='READY TO FLY'}}function loop(){if(!on)return;let mul=document.getElementById('m');let e=(Date.now()-st)/1000;let cur=1+Math.pow(e,1.5)*.45;if(cur>=lim){let pl=document.getElementById('p'),msg=document.getElementById('msg'),bt=document.getElementById('bt'),mul2=document.getElementById('m');on=0;mul2.innerText=lim.toFixed(2)+'x';mul2.style.color='#ff3b6e';msg.innerText='FLEW AWAY '+lim.toFixed(2)+'x';bt.innerText='BET '+bet+'$';bt.className='';pl.style.left='10%';pl.style.top='62%';pl.style.transform='rotate(0) scale(1)';setTimeout(()=>{mul2.innerText='1.00x';mul2.style.color='#fff';msg.innerText='READY TO FLY'},1200);return}mul.innerText=cur.toFixed(2)+'x';requestAnimationFrame(loop)}</script></body></html>
+<!doctype html>
+<html>
+<head>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;font-family:Arial}
+body{background:#000;color:#fff}
+#top{display:flex;justify-content:space-between;padding:12px;background:#000}
+#logo{color:#ff0a3d;font-weight:900;font-style:italic;font-size:26px}
+#bal{color:#00ff66;font-weight:900}
+#his{display:flex;gap:8px;padding:8px 10px;overflow:auto;background:#0a0a0a}
+#his span{padding:4px 8px;border-radius:10px;font-size:13px}
+#box{position:relative;height:360px;background:radial-gradient(ellipse at 30% 70%, #0a1a2a 0%, #000 70%);margin:8px;border-radius:18px;overflow:hidden;border:1px solid #222}
+#rays{position:absolute;inset:0;background:repeating-conic-gradient(from 200deg at 0% 100%, #111 0deg 8deg, #000 8deg 16deg);opacity:.6}
+canvas{position:absolute;left:0;top:0;width:100%;height:100%}
+#mul{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:78px;font-weight:900;color:#fff;z-index:3;text-shadow:0 0 20px #000}
+#planeEl{position:absolute;z-index:4;font-size:26px;transform:translate(-50%,-50%)}
+#lobby{position:absolute;left:12px;top:12px;z-index:5;background:#1a1a1a;padding:8px 12px;border-radius:20px;font-size:12px;border:1px solid #333}
+#live{position:absolute;right:12px;bottom:12px;z-index:5;background:#111;padding:4px 10px;border-radius:20px;font-size:12px;display:flex;align-items:center;gap:6px;border:1px solid #333}
+#panel{background:#1a1c22;margin:8px;border-radius:16px;padding:12px;display:flex;gap:12px}
+#left{flex:1}
+#tabs{display:flex;background:#2a2c33;border-radius:20px;padding:3px;width:200px;margin:0 auto 10px}
+#tabs div{flex:1;text-align:center;padding:6px;border-radius:16px;font-size:14px}
+#tabs .on{background:#3a3c44}
+#betRow{display:flex;align-items:center;gap:8px;justify-content:center}
+#betRow button{width:32px;height:32px;border-radius:50%;border:1px solid #444;background:#222;color:#fff}
+#betVal{font-size:22px;font-weight:900;min-width:70px;text-align:center}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.quick div{background:#2a2c33;padding:6px;border-radius:8px;text-align:center;color:#aaa;font-size:13px}
+#betBtn{flex:1;background:#2fbb00;border-radius:12px;border:0;color:#fff;font-weight:900;font-size:20px;padding:18px 0;box-shadow:0 4px 0 #228a00}
+#betBtn.cash{background:#ff3b30;box-shadow:0 4px 0 #a00}
+#bets{background:#1a1c22;margin:8px;border-radius:16px;padding:10px}
+</style>
+</head>
+<body>
+<div id=top><div id=logo>Aviator</div><div><span id=bal>0.00</span> PKR ☰</div></div>
+<div id=his></div>
+<div id=box>
+<div id=rays></div>
+<canvas id=cv></canvas>
+<div id=lobby>🏠<br>Lobby</div>
+<div id=mul>1.00x</div>
+<div id=planeEl>✈️</div>
+<div id=live>🐱👤👤 831</div>
+</div>
+<div id=panel>
+<div id=left>
+<div id=tabs><div class=on>Bet</div><div>Auto</div></div>
+<div id=betRow><button onclick="chg(-1)">−</button><div id=betVal>16.00</div><button onclick="chg(1)">+</button></div>
+<div class=quick><div onclick="setB(64)">64</div><div onclick="setB(160)">160</div><div onclick="setB(320)">320</div><div onclick="setB(1600)">1,600</div></div>
+</div>
+<button id=betBtn onclick="play()">Bet<br><span id=bTxt>16.00 PKR</span></button>
+</div>
+
+<script>
+let cv=document.getElementById('cv'), ctx=cv.getContext('2d'), W,H;
+function sz(){W=cv.width=cv.offsetWidth*2; H=cv.height=cv.offsetHeight*2} sz(); addEventListener('resize',sz);
+let bal=5000, bet=16, on=0, lim=2, st=0, curM=1, hist=[1.04,2.63,5.57,1.08,3.44,10.31];
+let his=document.getElementById('his'), mul=document.getElementById('mul'), planeEl=document.getElementById('planeEl'), balEl=document.getElementById('bal'), bTxt=document.getElementById('bTxt'), betVal=document.getElementById('betVal'), btn=document.getElementById('betBtn');
+
+function drawHist(){his.innerHTML=hist.map(v=>{let c=v<2?'#ff2a5a':v<5?'#7b61ff':'#00e0ff'; return `<span style="color:${c};background:#1a1a2a">${v.toFixed(2)}x</span>`}).join('')+' <span style="background:#222;padding:4px 8px;border-radius:10px">•••</span>'}
+drawHist(); balEl.innerText=bal.toFixed(2);
+
+function chg(d){bet=Math.max(1,bet+d*4); upd()} function setB(v){bet=v; upd()} function upd(){betVal.innerText=bet.toFixed(2); bTxt.innerText=bet.toFixed(2)+' PKR'}
+
+function drawCurve(p){ctx.clearRect(0,0,W,H); if(!on && curM==1) return;
+let prog=Math.min(p,1); let x = 20 + prog*(W-100); let y = H-20 - Math.pow(prog,1.7)*(H-120);
+ctx.beginPath(); ctx.moveTo(20,H-20); ctx.quadraticCurveTo(W*0.25, H-20, x, y);
+ctx.lineTo(x, H-20); ctx.closePath(); let g=ctx.createLinearGradient(0,H,0,0); g.addColorStop(0,'rgba(255,0,60,0.9)'); g.addColorStop(1,'rgba(255,0,60,0.1)'); ctx.fillStyle=g; ctx.fill();
+ctx.beginPath(); ctx.moveTo(20,H-20); ctx.quadraticCurveTo(W*0.25, H-20, x, y); ctx.strokeStyle='#ff0a3d'; ctx.lineWidth=6; ctx.lineCap='round'; ctx.stroke();
+planeEl.style.left=(x/2)+'px'; planeEl.style.top=(y/2)+'px'; planeEl.style.transform=`translate(-50%,-50%) rotate(${ -20 + prog*30 }deg)`; planeEl.innerText = prog>0.98 && !on ? '💥' : '🛩️'; planeEl.style.color='#ff0a3d'
+}
+
+function play(){
+if(!on){
+ if(bal<bet){alert('Low balance'); return}
+ bal-=bet; balEl.innerText=bal.toFixed(2);
+ lim=Math.random()<0.35?1+Math.random()*0.8: Math.random()<0.7?1.8+Math.random()*2.
