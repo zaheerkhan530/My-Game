@@ -1,17 +1,1 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AVIATOR PRO</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#0b0e1a;color:#fff}
-.top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#151a2e}
-.top b{color:#ff3b6e}
-.hist{display:flex;gap:6px;padding:8px 10px;background:#101528;overflow-x:auto;white-space:nowrap}
-.hist span{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:900;min-width:45px;text-align:center}
-.hist .red{background:#2a1a20;color:#ff6b8a}
-.hist .green{background:#1a2a1e;color:#00ff88}
-.hist .blue{background:#1a203a;color:#6c8bff}
-.game{position:relative;height:460px;margin:10px;background:radial-gradient(ellipse at 30% 80%, #1a2340 0%, #101528 60%);border-radius:20px;overflow:hidden;border:1px solid #1e274
+<!doctype html><title>AVIATOR PRO</title><meta name=viewport content=width=device-width,initial-scale=1><style>body{margin:0;background:#0b0e1a;color:#fff;font-family:sans-serif;text-align:center}#b{padding:8px;background:#151a2e;display:flex;justify-content:space-between}#h{display:flex;gap:3px;padding:4px;overflow:auto;background:#101528}#h span{padding:2px 6px;border-radius:8px;font-size:11px;font-weight:900}.r{background:#2a1a20;color:#ff6b8a}.g{background:#1a2a1e;color:#00ff88}.bl{background:#1a203a;color:#6c8bff}#a{height:360px;position:relative;background:#101528;margin:6px;border-radius:12px;border:1px solid #1e2747;overflow:hidden}#m{font-size:52px;font-weight:900;padding-top:110px}#o{width:94%;padding:14px;border:0;border-radius:10px;font-weight:900;font-size:16px;background:#00c853;color:#fff}#o.c{background:#ff1744}</style><div id=b><b>✈ AVIATOR PRO</b><b id=ba>1000</b></div><div id=h></div><div id=a><div id=m>1.00x</div><div id=s>READY TO FLY</div></div><button id=o onclick=go()>BET 10$</button><script>B=1000;b=10;M=1;P=0;C=2;H=[];A=null;G=()=>{if(!A)A=new AudioContext();return A};be=(f,t,d,v)=>{try{a=G();o=a.createOscillator();g=a.createGain();o.type=t;o.frequency.value=f;o.connect(g);g.connect(a.destination);g.gain.value=v;g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+d);o.start();o.stop(a.currentTime+d)}catch{}};ah=v=>{H.unshift(v);if(H.length>12)H.pop();h.innerHTML=H.map(x=>`<span class=${x<2?'r':x<5?'bl':'g'}>${x.toFixed(2)}x</span>`).join('')};go=()=>{G();if(!P){if(B<b)B=1000;B-=b;ba.innerText=B;C=Math.random()<.15?1+Math.random()*.8:Math.random()<.6?1.5+Math.random()*3.
