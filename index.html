@@ -1,15 +1,17 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"><title>AVIATOR SOUND FIX</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0d14;color:#fff;font-family:Arial}.top{padding:12px;background:#141a2a;display:flex;justify-content:space-between;align-items:center}.top b{color:#ff3b6e}.game{position:relative;height:480px;margin:10px;background:#101528;border-radius:20px;overflow:hidden}.center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}#mul{font-size:64px;font-weight:900;text-shadow:0 0 20px #ff3b6e}#msg{color:#8b93b0;margin-top:8px}.panel{background:#141a2a;margin:10px;padding:16px;border-radius:18px}.row{display:flex;justify-content:space-between;margin-bottom:12px;align-items:center}.row button{width:44px;height:44px;border:none;border-radius:8px;background:#232b45;color:#fff;font-size:22px;font-weight:900}#mainBtn{width:100%;padding:18px;border:none;border-radius:14px;font-weight:900;font-size:19px;background:#00c950;color:#fff}#mainBtn.cash{background:#ff3b6e;animation:pulse .6s infinite}@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}canvas{width:100%;height:100%}#sBtn{background:#ff3b6e;border:none;color:#fff;padding:8px 14px;border-radius:20px;font-weight:900}</style></head><body><div class="top"><div>✈ AVIATOR</div><div><button id="sBtn" onclick="toggleS()">🔊 ON</button> BAL: <b id="bal">1000</b></div></div><div class="game"><canvas id="cv"></canvas><div class="center"><div id="mul">1.00x</div><div id="msg">BET LAGAO - AWAZ KE LIYE BET DABAO</div></div></div><div class="panel"><div class="row"><div>BET: <b id="betTxt">10</b></div><div><button onclick="change(-10)">-</button> <button onclick="change(10)">+</button></div></div><button id="mainBtn" onclick="action()">🔊 BET 10 (Awaz On Karega)</button></div><script>
-let cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W,H,bal=1000,bet=10,mult=1,playing=false,crash=2,t0,raf,trail=[],soundOn=true,aCtx,osc;
-function getCtx(){if(!aCtx){aCtx=new(window.AudioContext||window.webkitAudioContext)();}if(aCtx.state==='suspended'){aCtx.resume();}return aCtx;}
-function beep(f,type,dur,vol){if(!soundOn)return;try{let ac=getCtx();let o=ac.createOscillator();let g=ac.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(ac.destination);g.gain.setValueAtTime(vol,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+dur);o.start(ac.currentTime);o.stop(ac.currentTime+dur);}catch(e){}}
-function toggleS(){soundOn=!soundOn;document.getElementById('sBtn').innerText=soundOn?'🔊 ON':'🔇 OFF';if(soundOn){getCtx();beep(800,'sine',0.3,0.8);beep(1200,'sine',0.3,0.8);}}
-function resize(){let r=cv.getBoundingClientRect();W=cv.width=r.width*2;H=cv.height=r.height*2}resize();onresize=resize;
-function change(d){if(playing)return;bet=Math.max(5,Math.min(500,bet+d));betTxt.innerText=bet;mainBtn.innerText='BET '+bet}
-function action(){getCtx();if(!playing)start();else cashout()}
-function start(){getCtx();if(bal<bet)bal=1000;bal-=bet;document.getElementById('bal').innerText=bal;crash=Math.random()<0.2?1+Math.random():1.5+Math.random()*9;playing=true;t0=Date.now();trail=[];mainBtn.innerText='💰 CASHOUT';mainBtn.className='cash';msg.innerText='UDD RAHA HAI... ✈️';beep(150,'sawtooth',1.2,0.9);beep(300,'square',1.2,0.3);loop()}
-function loop(){let e=(Date.now()-t0)/1000;mult=1+Math.pow(e,1.5)*0.32;if(mult>=crash){busted();return}mul.innerText=mult.toFixed(2)+'x';if(Math.floor(e*10)%5==0)beep(200+mult*60,'square',0.12,0.15);draw(e);raf=requestAnimationFrame(loop)}
-function draw(e){ctx.clearRect(0,0,W,H);let px=W*0.12,py=H*0.78;trail.push({x:px+e*48,y:py-Math.pow(e,1.45)*55});if(trail.length>120)trail.shift();ctx.beginPath();ctx.strokeStyle='#ff3b6e';ctx.lineWidth=8;ctx.lineCap='round';ctx.shadowColor='#ff3b6e';ctx.shadowBlur=15;if(trail.length>1){ctx.moveTo(trail[0].x,trail[0].y);for(let p of trail)ctx.lineTo(p.x,p.y)}ctx.stroke();ctx.shadowBlur=0;let lx=px+e*48,ly=py-Math.pow(e,1.45)*55;ctx.save();ctx.translate(lx,ly);ctx.rotate(-0.2);ctx.font='bold 62px Arial';ctx.fillText('✈️',-10,-10);ctx.restore()}
-function cashout(){if(!playing)return;let win=Math.floor(bet*mult);bal+=win;document.getElementById('bal').innerText=bal;msg.innerText='JEET GAYE! +'+win+' 💰';playing=false;mainBtn.innerText='BET '+bet;mainBtn.className='';cancelAnimationFrame(raf);beep(523,'sine',0.2,1);setTimeout(()=>beep(659,'sine',0.2,1),120);setTimeout(()=>beep(784,'sine',0.2,1),240);setTimeout(()=>beep(1046,'sine',0.6,1),360);setTimeout(reset,2000)}
-function busted(){playing=false;mul.innerText=crash.toFixed(2)+'x';mul.style.color='#ff3b6e';msg.innerText='FLEW AWAY! 💥';mainBtn.innerText='BET '+bet;mainBtn.className='';cancelAnimationFrame(raf);beep(200,'sawtooth',0.5,1);setTimeout(()=>beep(100,'sawtooth',0.8,1),200);setTimeout(()=>beep(50,'sawtooth',1,1),500);setTimeout(reset,2000)}
-function reset(){mul.innerText='1.00x';mul.style.color='#fff';msg.innerText='BET LAGAO';trail=[];ctx.clearRect(0,0,W,H)}
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AVIATOR PRO</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0b0e1a;color:#fff}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#151a2e}
+.top b{color:#ff3b6e}
+.hist{display:flex;gap:6px;padding:8px 10px;background:#101528;overflow-x:auto;white-space:nowrap}
+.hist span{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:900;min-width:45px;text-align:center}
+.hist .red{background:#2a1a20;color:#ff6b8a}
+.hist .green{background:#1a2a1e;color:#00ff88}
+.hist .blue{background:#1a203a;color:#6c8bff}
+.game{position:relative;height:460px;margin:10px;background:radial-gradient(ellipse at 30% 80%, #1a2340 0%, #101528 60%);border-radius:20px;overflow:hidden;border:1px solid #1e274
