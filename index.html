@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Game</title>
+<style>
+body{margin:0;background:#0f172a;color:#fff;font-family:Arial;text-align:center}
+#game{position:relative;width:100vw;height:90vh;background:linear-gradient(#38bdf8,#0f172a);overflow:hidden}
+#player{position:absolute;bottom:20px;left:50%;width:50px;height:50px;background:#facc15;border-radius:10px;transform:translateX(-50%);font-size:28px;line-height:50px}
+.coin{position:absolute;width:30px;height:30px;background:gold;border-radius:50%;text-align:center}
+#score{position:absolute;top:10px;left:10px;font-size:20px}
+#btns{position:absolute;bottom:0;width:100%;display:flex;justify-content:space-between;padding:10px;box-sizing:border-box}
+button{padding:12px 25px;font-size:18px;border:0;border-radius:8px;background:#22c55e;color:#fff}
+</style>
+</head>
+<body>
+<div id="game">
+<div id="score">Score: 0</div>
+<div id="player">🚀</div>
+<div id="btns"><button onclick="move(-40)">◀️ LEFT</button><button onclick="move(40)">RIGHT ▶️</button></div>
+</div>
+<script>
+let s=0,px=innerWidth/2,pl=document.getElementById('player'),gm=document.getElementById('game'),sc=document.getElementById('score');
+function move(d){px+=d;if(px<20)px=20;if(px>innerWidth-20)px=innerWidth-20;pl.style.left=px+'px'}
+function coin(){let c=document.createElement('div');c.className='coin';c.innerHTML='💰';c.style.left=Math.random()*(innerWidth-40)+'px';c.style.top='0px';gm.appendChild(c);let f=setInterval(()=>{let t=parseInt(c.style.top)+5;c.style.top=t+'px';if(t>innerHeight-120&&Math.abs(parseInt(c.style.left)-px)<35){s++;sc.innerText='Score: '+s;clearInterval(f);c.remove()}if(t>innerHeight){clearInterval(f);c.remove()}},30)}setInterval(coin,700);
+</script>
+</body>
+</html>
