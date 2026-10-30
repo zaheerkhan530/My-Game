@@ -22,16 +22,4 @@ function draw(p){
 }
 function start(){
  iA();st=Date.now();lim=Math.random()<0.5?1+Math.random():Math.random()<0.8?2+Math.random()*3:6+Math.random()*10;
- plane.innerHTML='<svg viewBox="0 0 120 40" width="100%"><path d="M5 20 L90 20 L110 8 L115 10 L108 20 L115 30 L110 32 L90 20 L8 28 Z" fill="#ff0a3d" stroke="#fff" stroke-width="0.8"/></svg>';plane.style.width='70px';snd(200,0.4,0.3);loop();
-}
-function loop(){
- let e=(Date.now()-st)/1000;cur=1+Math.pow(e,1.5)*0.4;
- if(cur>=lim){
-  mul.innerText=lim.toFixed(2)+'x';mul.style.color='#ff3b6e';draw(1);plane.innerHTML='💥';snd(100,1,0.6);
-  setTimeout(()=>{mul.innerText='1.00x';mul.style.color='#fff';draw(0);setTimeout(start,1200)},1000);return;
- }
- mul.innerText=cur.toFixed(2)+'x';draw(Math.min(e/6,1));requestAnimationFrame(loop);
-}
-document.body.addEventListener('click',()=>{iA()}, {once:true});
-setTimeout(start,500);draw(0);
-</script></body></html>
+ plane.innerHTML='<svg viewBox
